@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.topanotti</groupId>
 	<artifactId>teste-sicredi</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>teste-sicredi</name>
 	<description>Teste vaga FullStack</description>
 

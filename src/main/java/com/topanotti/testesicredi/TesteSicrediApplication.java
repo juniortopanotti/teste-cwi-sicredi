@@ -27,10 +27,10 @@ public class TesteSicrediApplication {
 		SpringApplication.run(TesteSicrediApplication.class, args);
 		try {
 			String fileDirectory = args[0];
-			LOGGER.info("Diretório do arquivo para a sincronização carregado com sucesso: " + fileDirectory);
+			LOGGER.info("Diretorio do arquivo para a sincronizacao carregado com sucesso: " + fileDirectory);
 			openFile(fileDirectory);
 		} catch (ArrayIndexOutOfBoundsException ex) {
-			LOGGER.error("É necessário informar o diretório do arquivo de importação.");
+			LOGGER.error("É necessario informar o diretorio do arquivo de importacao.");
 		}
 	}
 
@@ -52,7 +52,7 @@ public class TesteSicrediApplication {
 	public static void readFileContent(Sheet datatypeSheet) {
 		Iterator<Row> iterator = datatypeSheet.iterator();
 		LOGGER.info("Identificado " + datatypeSheet.getLastRowNum() + " registros de contas inseridos no arquivo...");
-		LOGGER.info("Iniciando o processo de atualização para receita...");
+		LOGGER.info("Iniciando o processo de atualizacao para receita...");
 
 		while (iterator.hasNext()) {
 			Row currentRow = iterator.next();
@@ -63,12 +63,12 @@ public class TesteSicrediApplication {
 			sendUpdateToReceita(currentRow, datatypeSheet.getLastRowNum());
 		}
 
-		LOGGER.info("Todas as foram contas enviadas para atualização.");
+		LOGGER.info("Todas as foram contas enviadas para atualizacao.");
 	}
 
 	public static void sendUpdateToReceita(Row currentRow, Integer rowsSize) {
 		ContaDTO conta = parseCellsRow(currentRow);
-		LOGGER.info("Enviando atualização da conta " + currentRow.getRowNum() + " de " + rowsSize);
+		LOGGER.info("Enviando atualizacao da conta " + currentRow.getRowNum() + " de " + rowsSize);
 		Boolean status = null;
 		Integer retry = 1;
 
@@ -76,33 +76,33 @@ public class TesteSicrediApplication {
 			try {
 				status = receitaService.atualizarConta(conta.getAgencia().toString(), conta.getConta(), conta.getSaldo(), conta.getStatus());
 			} catch (RuntimeException e) {
-				LOGGER.info("Ocorreu uma falha na comunicação. Tentativa " + retry + " de " + 3);
+				LOGGER.info("Ocorreu uma falha na comunicacao. Tentativa " + retry + " de " + 3);
 			} catch (InterruptedException e) {
-				LOGGER.info("Ocorreu uma falha na comunicação. Tentativa " + retry + " de " + 3);
+				LOGGER.info("Ocorreu uma falha na comunicacao. Tentativa " + retry + " de " + 3);
 			} finally {
 				retry++;
 			}
 		}
 		if (status == null) {
-			LOGGER.info("Esgotadas todas as tentativas, tentando próximo registro.");
+			LOGGER.info("Esgotadas todas as tentativas, tentando proximo registro.");
 			status = false;
 			currentRow.createCell(4).setCellValue(status.toString());
 			return;
 		}
 
 		currentRow.createCell(4).setCellValue(status.toString());
-		LOGGER.info("Conta enviada para atualização, retorno do serviço: " + status);
+		LOGGER.info("Conta enviada para atualizacao, retorno do servico: " + status);
 	}
 
 	public static void saveNewFile(Workbook workbook) throws IOException {
-		LOGGER.info("Gravando novo documento com as informações de retorno...");
+		LOGGER.info("Gravando novo documento com as informacoes de retorno...");
 		File currDir = new File(".");
 		String path = currDir.getAbsolutePath();
 		String fileLocation = path.substring(0, path.length() - 1) + "contas-atualizadas.xlsx";
 		FileOutputStream outputStream = new FileOutputStream(fileLocation);
 		workbook.write(outputStream);
 		workbook.close();
-		LOGGER.info("Documento gravado com sucesso, diretório do arquivo em: " + fileLocation);
+		LOGGER.info("Documento gravado com sucesso, diretorio do arquivo em: " + fileLocation);
 	}
 
 	public static ContaDTO parseCellsRow(Row row) {
